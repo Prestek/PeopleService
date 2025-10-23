@@ -3,6 +3,8 @@ package com.prestek.people.controller;
 import java.util.List;
 import java.util.Map;
 
+import com.prestek.people.dto.CreateApplicationDto;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -79,7 +81,7 @@ public class ApplicationController {
     })
     public ResponseEntity<List<ApplicationDto>> getApplicationsByUserId(
             @Parameter(description = "User ID", required = true, example = "1")
-            @PathVariable Long userId) {
+            @PathVariable String userId) {
         log.info("GET /api/applications/user/{} - Fetching applications by user id", userId);
         List<ApplicationDto> applications = applicationService.getApplicationsByUserId(userId);
         return ResponseEntity.ok(applications);
@@ -126,11 +128,11 @@ public class ApplicationController {
     public ResponseEntity<ApplicationDto> createApplication(
             @Parameter(description = "Application request containing userId and creditOfferId", required = true,
                       schema = @Schema(example = "{\"userId\": 1, \"creditOfferId\": 1}"))
-            @RequestBody Map<String, Long> request) {
+            @Valid @RequestBody CreateApplicationDto request) {
         log.info("POST /api/applications - Creating new application");
         
-        Long userId = request.get("userId");
-        Long creditOfferId = request.get("creditOfferId");
+        String userId = request.getUserId();
+        Long creditOfferId = request.getCreditOfferId();
         
         if (userId == null || creditOfferId == null) {
             log.error("Missing required fields: userId or creditOfferId");
@@ -192,7 +194,7 @@ public class ApplicationController {
     })
     public ResponseEntity<Map<String, Long>> getApplicationCountByUserId(
             @Parameter(description = "User ID", required = true, example = "1")
-            @PathVariable Long userId) {
+            @PathVariable String userId) {
         log.info("GET /api/applications/user/{}/count - Getting application count for user", userId);
         Long count = applicationService.getApplicationCountByUserId(userId);
         return ResponseEntity.ok(Map.of("count", count));

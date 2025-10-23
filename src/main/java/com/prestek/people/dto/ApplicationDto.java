@@ -45,7 +45,7 @@ public class ApplicationDto {
     private LocalDateTime updatedAt;
     
     @Schema(description = "ID of the user who submitted the application", example = "1")
-    private Long userId;
+    private String userId;
     
     @Schema(description = "ID of the credit offer associated with the application", example = "1")
     private Long creditOfferId;

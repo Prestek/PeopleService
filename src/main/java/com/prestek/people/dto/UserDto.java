@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 public class UserDto {
     
     @Schema(description = "User unique identifier", example = "1", accessMode = Schema.AccessMode.READ_ONLY)
-    private Long id;
+    private String id;
     
     @Schema(description = "User's first name", example = "John", required = true)
     private String firstName;
