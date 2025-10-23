@@ -12,7 +12,7 @@ import java.util.List;
 @Repository
 public interface ApplicationRepository extends JpaRepository<Application, Long> {
     
-    List<Application> findByUserId(Long userId);
+    List<Application> findByUserId(String userId);
     
     List<Application> findByCreditOfferId(Long creditOfferId);
     
@@ -25,5 +25,5 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
     List<Application> findByCreditOfferIdAndStatus(@Param("creditOfferId") Long creditOfferId, @Param("status") ApplicationStatus status);
     
     @Query("SELECT COUNT(a) FROM Application a WHERE a.user.id = :userId")
-    Long countByUserId(@Param("userId") Long userId);
+    Long countByUserId(@Param("userId") String userId);
 }
