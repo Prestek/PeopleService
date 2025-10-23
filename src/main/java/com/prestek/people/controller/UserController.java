@@ -61,7 +61,7 @@ public class UserController {
     })
     public ResponseEntity<UserDto> getUserById(
             @Parameter(description = "User ID", required = true, example = "1")
-            @PathVariable String id) {
+            @PathVariable Long id) {
         log.info("GET /api/users/{} - Fetching user by id", id);
         return userService.getUserById(id)
                 .map(user -> ResponseEntity.ok(user))
@@ -117,7 +117,7 @@ public class UserController {
     })
     public ResponseEntity<UserDto> updateUser(
             @Parameter(description = "User ID", required = true, example = "1")
-            @PathVariable String id,
+            @PathVariable Long id,
             @Parameter(description = "Updated user data", required = true)
             @RequestBody UserDto userDto) {
         log.info("PUT /api/users/{} - Updating user", id);
@@ -134,7 +134,7 @@ public class UserController {
     })
     public ResponseEntity<Void> deleteUser(
             @Parameter(description = "User ID", required = true, example = "1")
-            @PathVariable String id) {
+            @PathVariable Long id) {
         log.info("DELETE /api/users/{} - Deleting user", id);
         boolean deleted = userService.deleteUser(id);
         return deleted ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
