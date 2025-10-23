@@ -30,7 +30,7 @@ public class UserService {
                 .collect(Collectors.toList());
     }
     
-    public Optional<UserDto> getUserById(Long id) {
+    public Optional<UserDto> getUserById(String id) {
         log.info("Fetching user with id: {}", id);
         return userRepository.findById(id)
                 .map(this::convertToDto);
@@ -60,7 +60,7 @@ public class UserService {
         return convertToDto(savedUser);
     }
     
-    public Optional<UserDto> updateUser(Long id, UserDto userDto) {
+    public Optional<UserDto> updateUser(String id, UserDto userDto) {
         log.info("Updating user with id: {}", id);
         
         return userRepository.findById(id)
@@ -72,7 +72,7 @@ public class UserService {
                 });
     }
     
-    public boolean deleteUser(Long id) {
+    public boolean deleteUser(String id) {
         log.info("Deleting user with id: {}", id);
         
         if (userRepository.existsById(id)) {

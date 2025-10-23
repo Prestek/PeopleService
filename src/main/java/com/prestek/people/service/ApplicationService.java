@@ -42,7 +42,7 @@ public class ApplicationService {
                 .map(this::convertToDto);
     }
     
-    public List<ApplicationDto> getApplicationsByUserId(Long userId) {
+    public List<ApplicationDto> getApplicationsByUserId(String userId) {
         log.info("Fetching applications for user id: {}", userId);
         return applicationRepository.findByUserId(userId)
                 .stream()
@@ -66,7 +66,7 @@ public class ApplicationService {
                 .collect(Collectors.toList());
     }
     
-    public ApplicationDto createApplication(Long userId, Long creditOfferId) {
+    public ApplicationDto createApplication(String userId, Long creditOfferId) {
         log.info("Creating new application for user {} and credit offer {}", userId, creditOfferId);
         
         var user = userRepository.findById(userId)
@@ -135,7 +135,7 @@ public class ApplicationService {
         return false;
     }
     
-    public Long getApplicationCountByUserId(Long userId) {
+    public Long getApplicationCountByUserId(String userId) {
         log.info("Getting application count for user id: {}", userId);
         return applicationRepository.countByUserId(userId);
     }
