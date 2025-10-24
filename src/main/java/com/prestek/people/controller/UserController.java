@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,9 +36,9 @@ import lombok.extern.slf4j.Slf4j;
 @CrossOrigin(origins = "*")
 @Tag(name = "Users", description = "User management operations")
 public class UserController {
-    
+
     private final UserService userService;
-    
+
     @GetMapping
     @Operation(summary = "Get all users", description = "Retrieve a list of all registered users")
     @ApiResponses(value = {
@@ -46,11 +47,10 @@ public class UserController {
                         array = @ArraySchema(schema = @Schema(implementation = UserDto.class))))
     })
     public ResponseEntity<List<UserDto>> getAllUsers() {
-        log.info("GET /api/users - Fetching all users");
         List<UserDto> users = userService.getAllUsers();
         return ResponseEntity.ok(users);
     }
-    
+
     @GetMapping("/{id}")
     @Operation(summary = "Get user by ID", description = "Retrieve a specific user by their unique identifier")
     @ApiResponses(value = {
@@ -67,7 +67,7 @@ public class UserController {
                 .map(user -> ResponseEntity.ok(user))
                 .orElse(ResponseEntity.notFound().build());
     }
-    
+
     @GetMapping("/email/{email}")
     @Operation(summary = "Get user by email", description = "Retrieve a specific user by their email address")
     @ApiResponses(value = {
@@ -84,7 +84,7 @@ public class UserController {
                 .map(user -> ResponseEntity.ok(user))
                 .orElse(ResponseEntity.notFound().build());
     }
-    
+
     @PostMapping
     @Operation(summary = "Create new user", description = "Create a new user in the system")
     @ApiResponses(value = {
@@ -105,7 +105,7 @@ public class UserController {
             return ResponseEntity.badRequest().build();
         }
     }
-    
+
     @PutMapping("/{id}")
     @Operation(summary = "Update user", description = "Update an existing user's information")
     @ApiResponses(value = {
@@ -125,8 +125,9 @@ public class UserController {
                 .map(user -> ResponseEntity.ok(user))
                 .orElse(ResponseEntity.notFound().build());
     }
-    
+
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Delete user", description = "Delete a user from the system")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "204", description = "User deleted successfully"),
