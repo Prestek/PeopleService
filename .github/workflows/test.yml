@@ -1,0 +1,26 @@
+name: Check EC2 SSH Key
+
+on:
+  push:
+    branches:
+      - dev
+  workflow_dispatch:   # Permite ejecutarlo manualmente desde GitHub
+
+jobs:
+  check-key:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📝 Mostrar si el secret existe
+        run: |
+          if [ -z "${{ secrets.EC2_SSH_KEY }}" ]; then
+            echo "❌ EC2_SSH_KEY NO está configurado"
+            exit 1
+          else
+            echo "✅ EC2_SSH_KEY está configurado correctamente"
+          fi
+
+      - name: 🔒 Ver solo los primeros caracteres del secret (para validación)
+        run: |
+          echo "${{ secrets.EC2_SSH_KEY }}" | cut -c1-20
+          echo "✔ (Solo se muestran los primeros 20 caracteres por seguridad)"
