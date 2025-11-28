@@ -8,14 +8,15 @@ on:
 
 jobs:
   deploy:
-    uses: Prestek/central-pipelines/.github/workflows/deploy.yml@V0.0.2
+    uses: Prestek/central-pipelines/.github/workflows/deploy.yml@V0.0.3
     with:
       PROJECT_NAME: "PeopleService"       # Nombre de la carpeta/proyecto en la instancia EC2
       IMAGE_NAME: "people-service"                  # Nombre de la imagen Docker
       CONTAINER_NAME: "people-service"              # Nombre del contenedor Docker
       PORT: "8080"                        # Puerto en el que se expondrá el contenedor
       REPO_URL: "https://github.com/Prestek/PeopleService.git"  # URL del repositorio a desplegar
-      BRANCH: "dev"                      
+      BRANCH: "dev"    
+      AWS_REGION: "us-east-2"                  
     secrets:
       EC2_SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
       EC2_HOST: ${{ secrets.EC2_HOST }}
