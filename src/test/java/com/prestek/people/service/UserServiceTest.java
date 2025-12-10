@@ -401,6 +401,156 @@ class UserServiceTest {
     }
 
     // ==========================================
+    // 4. USER UPDATE TESTS
+    // ==========================================
+
+    @Test
+    @DisplayName("Should update user successfully")
+    void shouldUpdateUserSuccessfully() {
+        // Given
+        UserDto updateDto = UserDto.builder()
+                .firstName("John Updated")
+                .lastName("Doe Updated")
+                .phone("+9999999999")
+                .monthlyIncome(6000.0)
+                .monthlyExpenses(3500.0)
+                .creditScore(800)
+                .employmentStatus("SELF_EMPLOYED")
+                .build();
+
+        User updatedUser = User.builder()
+                .id(1L)
+                .firstName("John Updated")
+                .lastName("Doe Updated")
+                .email("john.doe@example.com")
+                .phone("+9999999999")
+                .documentNumber("12345678")
+                .monthlyIncome(6000.0)
+                .monthlyExpenses(3500.0)
+                .creditScore(800)
+                .employmentStatus("SELF_EMPLOYED")
+                .createdAt(validUser.getCreatedAt())
+                .updatedAt(LocalDateTime.now())
+                .build();
+
+        when(userRepository.findById(1L)).thenReturn(Optional.of(validUser));
+        when(userRepository.save(any(User.class))).thenReturn(updatedUser);
+
+        // When
+        Optional<UserDto> result = userService.updateUser(1L, updateDto);
+
+        // Then
+        assertThat(result).isPresent();
+        assertThat(result.get().getFirstName()).isEqualTo("John Updated");
+        assertThat(result.get().getLastName()).isEqualTo("Doe Updated");
+        assertThat(result.get().getPhone()).isEqualTo("+9999999999");
+        assertThat(result.get().getMonthlyIncome()).isEqualTo(6000.0);
+        assertThat(result.get().getMonthlyExpenses()).isEqualTo(3500.0);
+        assertThat(result.get().getCreditScore()).isEqualTo(800);
+        assertThat(result.get().getEmploymentStatus()).isEqualTo("SELF_EMPLOYED");
+
+        verify(userRepository).findById(1L);
+        verify(userRepository).save(any(User.class));
+    }
+
+    @Test
+    @DisplayName("Should update user with partial data")
+    void shouldUpdateUserWithPartialData() {
+        // Given
+        UserDto partialUpdateDto = UserDto.builder()
+                .firstName("John Updated")
+                .creditScore(800)
+                .build();
+
+        User updatedUser = User.builder()
+                .id(1L)
+                .firstName("John Updated")
+                .lastName("Doe")
+                .email("john.doe@example.com")
+                .phone("+1234567890")
+                .documentNumber("12345678")
+                .monthlyIncome(5000.0)
+                .monthlyExpenses(3000.0)
+                .creditScore(800)
+                .employmentStatus("EMPLOYED")
+                .createdAt(validUser.getCreatedAt())
+                .updatedAt(LocalDateTime.now())
+                .build();
+
+        when(userRepository.findById(1L)).thenReturn(Optional.of(validUser));
+        when(userRepository.save(any(User.class))).thenReturn(updatedUser);
+
+        // When
+        Optional<UserDto> result = userService.updateUser(1L, partialUpdateDto);
+
+        // Then
+        assertThat(result).isPresent();
+        assertThat(result.get().getFirstName()).isEqualTo("John Updated");
+        assertThat(result.get().getLastName()).isEqualTo("Doe");
+        assertThat(result.get().getCreditScore()).isEqualTo(800);
+
+        verify(userRepository).findById(1L);
+        verify(userRepository).save(any(User.class));
+    }
+
+    @Test
+    @DisplayName("Should return empty when updating non-existent user")
+    void shouldReturnEmptyWhenUpdatingNonExistentUser() {
+        // Given
+        UserDto updateDto = UserDto.builder()
+                .firstName("John")
+                .build();
+
+        when(userRepository.findById(999L)).thenReturn(Optional.empty());
+
+        // When
+        Optional<UserDto> result = userService.updateUser(999L, updateDto);
+
+        // Then
+        assertThat(result).isEmpty();
+
+        verify(userRepository).findById(999L);
+        verify(userRepository, never()).save(any(User.class));
+    }
+
+    // ==========================================
+    // 5. USER DELETE TESTS
+    // ==========================================
+
+    @Test
+    @DisplayName("Should delete user successfully")
+    void shouldDeleteUserSuccessfully() {
+        // Given
+        when(userRepository.existsById(1L)).thenReturn(true);
+        doNothing().when(userRepository).deleteById(1L);
+
+        // When
+        boolean result = userService.deleteUser(1L);
+
+        // Then
+        assertThat(result).isTrue();
+
+        verify(userRepository).existsById(1L);
+        verify(userRepository).deleteById(1L);
+    }
+
+    @Test
+    @DisplayName("Should return false when deleting non-existent user")
+    void shouldReturnFalseWhenDeletingNonExistentUser() {
+        // Given
+        when(userRepository.existsById(999L)).thenReturn(false);
+
+        // When
+        boolean result = userService.deleteUser(999L);
+
+        // Then
+        assertThat(result).isFalse();
+
+        verify(userRepository).existsById(999L);
+        verify(userRepository, never()).deleteById(anyLong());
+    }
+
+    // ==========================================
     // HELPER METHODS
     // ==========================================
 

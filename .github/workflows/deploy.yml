@@ -16,7 +16,7 @@ jobs:
       PORT: "8080"                        # Puerto en el que se expondrá el contenedor
       REPO_URL: "https://github.com/Prestek/PeopleService.git"  # URL del repositorio a desplegar
       BRANCH: "dev"    
-      AWS_REGION: "us-east-2"                  
+      AWS_REGION: "us-east-1"                  
     secrets:
       EC2_SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
       EC2_HOST: ${{ secrets.EC2_HOST }}
