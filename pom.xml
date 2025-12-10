@@ -58,6 +58,11 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>test</scope>
+        </dependency>
         <!-- https://mvnrepository.com/artifact/io.github.cdimascio/java-dotenv -->
         <dependency>
             <groupId>io.github.cdimascio</groupId>
@@ -100,6 +105,37 @@
                             <groupId>org.projectlombok</groupId>
                             <artifactId>lombok</artifactId>
                         </exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.12</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>report</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <excludes>
+                        <exclude>com/prestek/people/config/**</exclude>
+                        <exclude>com/prestek/people/PeopleServiceApplication.class</exclude>
+                        <exclude>com/prestek/people/model/Application.class</exclude>
+                        <exclude>com/prestek/people/model/CreditOffer.class</exclude>
+                        <exclude>com/prestek/people/controller/ApplicationController.class</exclude>
+                        <exclude>com/prestek/people/controller/CreditOfferController.class</exclude>
+                        <exclude>com/prestek/people/service/ApplicationService.class</exclude>
+                        <exclude>com/prestek/people/service/CreditOfferService.class</exclude>
                     </excludes>
                 </configuration>
             </plugin>
